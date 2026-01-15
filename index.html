@@ -1,9 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>LCC1T</title>
   <style>
     :root {
@@ -22,18 +21,14 @@
       background: var(--bg-light);
       color: var(--text-light);
       min-height: 100vh;
+      padding-top: 60px;
     }
 
-    body.dark {
-      background: var(--bg-dark);
-      color: var(--text-dark);
-    }
+    body.dark { background: var(--bg-dark); color: var(--text-dark); }
 
-    .app { padding: 16px; }
+    .app { padding: 16px; margin-left: 0; }
+    h3 { margin-top: 0; padding-left: 40px; } /* conteúdo mais à direita */
 
-    h3 { margin-top: 0; }
-
-    /* Hamburger */
     .hamburger {
       position: fixed;
       top: 16px;
@@ -46,13 +41,8 @@
       cursor: pointer;
       z-index: 1001;
     }
-    .hamburger span {
-      height: 3px;
-      background: currentColor;
-      border-radius: 2px;
-    }
+    .hamburger span { height: 3px; background: currentColor; border-radius: 2px; }
 
-    /* Menu */
     .menu {
       position: fixed;
       top: 0;
@@ -69,67 +59,25 @@
     }
     body.dark .menu { background: rgba(30,30,30,0.7); }
     .menu.open { transform: translateX(0); }
-
-    .menu button {
-      width: 100%;
-      padding: 14px;
-      margin-bottom: 12px;
-      border: none;
-      border-radius: 16px;
-      background: var(--card-light);
-      font-size: 15px;
-      text-align: left;
-    }
+    .menu button { width: 100%; padding: 14px; margin-bottom: 12px; border: none; border-radius: 16px; background: var(--card-light); font-size: 15px; text-align: left; }
     body.dark .menu button { background: var(--card-dark); color: var(--text-dark); }
 
-    /* Views */
     .view { display: none; }
     .view.active { display: block; }
 
-    /* Cards */
-    .card {
-      background: var(--card-light);
-      border-radius: 22px;
-      padding: 16px;
-      margin-bottom: 16px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
-    }
+    .card { background: var(--card-light); border-radius: 22px; padding: 16px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); cursor: pointer; }
     body.dark .card { background: var(--card-dark); }
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-      gap: 14px;
-    }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
+    .disciplina { padding: 18px; border-radius: 20px; background: linear-gradient(135deg, #42a5f5, #7e57c2); color: white; text-align: center; font-weight: 500; cursor: pointer; }
 
-    .disciplina {
-      padding: 18px;
-      border-radius: 20px;
-      background: linear-gradient(135deg, #42a5f5, #7e57c2);
-      color: white;
-      text-align: center;
-      font-weight: 500;
-      cursor: pointer;
-    }
-
-    .fab {
-      position: fixed;
-      bottom: 25px;
-      right: 25px;
-      width: 58px;
-      height: 58px;
-      border-radius: 50%;
-      border: none;
-      font-size: 32px;
-      background: var(--accent);
-      color: white;
-      cursor: pointer;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
-      display: none;
-    }
+    .fab { position: fixed; bottom: 25px; right: 25px; width: 58px; height: 58px; border-radius: 50%; border: none; font-size: 32px; background: var(--accent); color: white; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.25); display: none; }
     .fab.show { display: block; }
 
     ul { padding-left: 18px; }
+    pre { white-space: pre-wrap; word-wrap: break-word; }
+
+    .expandable-content { display: none; padding-top: 8px; }
   </style>
 </head>
 <body>
@@ -147,12 +95,11 @@
 </div>
 
 <div class="app">
-
   <div id="home" class="view active">
     <h3>📌 Conteúdos Recentes</h3>
-    <div class="card">Análise Matemática: Progressões Aritméticas e Geométricas</div>
-    <div class="card">ICC: Conversão de bases e soma binária</div>
-    <div class="card">Programação I: Matrizes</div>
+    <div class="card" onclick="abrirDisciplina('Análise Matemática')">Análise Matemática: Progressões</div>
+    <div class="card" onclick="abrirDisciplina('ICC')">ICC: Conversão de bases e soma binária</div>
+    <div class="card" onclick="abrirDisciplina('Programação I')">Programação I: Matrizes</div>
   </div>
 
   <div id="disciplinas" class="view">
@@ -163,12 +110,12 @@
   <div id="disciplinaView" class="view"></div>
 
   <div id="calendarios" class="view">
-    <h3>Calendário Académico (Demo)</h3>
-    <div class="card"><strong>Segunda:</strong> Análise Matemática, ICC</div>
-    <div class="card"><strong>Terça:</strong> Programação I, Comunicação Escrita</div>
-    <div class="card"><strong>Quarta:</strong> Lógica Matemática, MIC</div>
-    <div class="card"><strong>Quinta:</strong> Programação I (Prática)</div>
-    <div class="card"><strong>Sexta:</strong> Revisões / Exercícios</div>
+    <h3>Calendário Académico</h3>
+    <div class="card"><strong>Segunda:</strong> Lógica, Análise, Comunicação Escrita</div>
+    <div class="card"><strong>Terça:</strong> Lógica, ICC, ICC</div>
+    <div class="card"><strong>Quarta:</strong> MIC, Análise, Programação I</div>
+    <div class="card"><strong>Quinta:</strong> MIC, Inglês, Comunicação Escrita</div>
+    <div class="card"><strong>Sexta:</strong> Inglês, Programação I, Programação I</div>
   </div>
 
   <div id="anotacoes" class="view">
@@ -183,19 +130,34 @@
 
 <script>
   const conteudo = {
-    'Análise Matemática': `Progressões Aritméticas (PA):\n\nFórmula do termo geral: an = a1 + (n-1)r\nSoma: Sn = n(a1+an)/2\n\nProgressões Geométricas (PG):\nTermo geral: an = a1·r^(n-1)\nSoma finita: Sn = a1(r^n-1)/(r-1)\n\nExemplo: 2,4,6,8 é uma PA com r=2`,
-
-    'Lógica Matemática': `Tabela da Verdade:\n\n¬p (negação)\np ∧ q (conjunção)\np ∨ q (disjunção)\np → q (condicional)\np ↔ q (bicondicional)\n\nUse tabelas para validar proposições compostas.`,
-
-    'ICC': `Conversão de bases:\n\nDecimal → Binário\nDivisões sucessivas por 2\n\nBinário → Decimal\nSoma dos pesos (2^n)\n\nUnidades:\n1 KB = 1024 B\n1 MB = 1024 KB\n1 GB = 1024 MB\n\nSoma binária:\n1+1 = 0 (vai 1)`,
-
-    'MIC': `Tema vs Título:\n\nTema: assunto geral\nTítulo: forma específica do estudo\n\nMetodologia Científica:\n- Tipo de pesquisa\n- População e amostra\n- Instrumentos de recolha de dados\n- Procedimentos`,
-
-    'Programação I': `Estruturas:\n\nCondição: if / else\nRepetição: for, while\nVetores: int v[10]\nMatrizes: int m[3][3]\n\nPercorrer matriz com dois ciclos for.`,
-
-    'Comunicação Escrita': `Frase e oração\nUso correto da vírgula\nAnálise morfológica\n\nPronomes enclíticos e mesoclíticos:\nVê-o\nComprei-lhe\nDeram-lhe-o`,
-
-    'Inglês Técnico': `Ainda sem conteúdo.`
+    'Análise Matemática': [
+      {title: 'Progressões Aritméticas', text: 'PA: termo geral an = a1 + (n-1)r. Soma: Sn = n(a1+an)/2. Exemplo: 2,4,6,8.'},
+      {title: 'Progressões Geométricas', text: 'PG: termo geral an = a1·r^(n-1). Soma: Sn = a1(r^n-1)/(r-1). Exemplo: 3,6,12,24.'},
+      {title: 'Dicas', text: 'Identifique sempre a razão r. Resolva exercícios de soma de termos.'}
+    ],
+    'Lógica Matemática': [
+      {title: 'Tabelas da Verdade', text: 'Negação ¬p, conjunção p∧q, disjunção p∨q, condicional p→q, bicondicional p↔q. Exemplo com duas variáveis:'},
+      {title: 'Exemplo de Tabela', text: 'p | q | p∧q\n0 | 0 | 0\n0 | 1 | 0\n1 | 0 | 0\n1 | 1 | 1'},
+      {title: 'Dicas', text: 'Use tabelas para validar proposições compostas. Pratique com 2 ou 3 variáveis.'}
+    ],
+    'ICC': [
+      {title: 'Conversão de Bases', text: 'Decimal→Binário: divisões sucessivas por 2. Binário→Decimal: soma dos pesos 2^n. Bases 8 e 16: agrupe bits.'},
+      {title: 'Conversão de Unidades', text: '1 KB = 1024 B, 1 MB = 1024 KB, 1 GB = 1024 MB.'},
+      {title: 'Soma Binária', text: '0+0=0, 1+0=1, 1+1=0 (vai 1). Pratique somas e subtrações binárias.'}
+    ],
+    'MIC': [
+      {title: 'Diferença entre Tema e Título', text: 'Tema: assunto geral. Título: forma específica do estudo.'},
+      {title: 'Metodologia Científica', text: 'Inclui tipo de pesquisa, população e amostra, instrumentos, procedimentos, referências bibliográficas. Organize em etapas e subtítulos.'}
+    ],
+    'Programação I': [
+      {title: 'Estruturas de Controle', text: 'If, else, else if; For, while; Vetores e Matrizes.'},
+      {title: 'Matrizes', text: 'Exemplo: int m[3][3]; percorrer com dois loops for. Sempre inicialize variáveis. Comente seu código.'}
+    ],
+    'Comunicação Escrita': [
+      {title: 'Frases e Pontuação', text: 'Uso correto da vírgula. Análise morfológica: substantivos, verbos, pronomes.'},
+      {title: 'Pronomes Clíticos', text: 'Vê-o, Comprei-lhe, Deram-lhe-o. Leia frases em voz alta para praticar.'}
+    ],
+    'Inglês Técnico': [{title: 'Conteúdo', text: 'Ainda sem conteúdo.'}]
   };
 
   const disciplinas = Object.keys(conteudo);
@@ -203,38 +165,29 @@
   const fab = document.getElementById('fab');
 
   function toggleMenu(){ menu.classList.toggle('open'); }
-
-  function showView(id){
-    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
-    document.getElementById(id).classList.add('active');
-    fab.classList.toggle('show', id==='disciplinaView');
-    menu.classList.remove('open');
-  }
-
+  function showView(id){ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.getElementById(id).classList.add('active'); fab.classList.toggle('show', id==='disciplinaView'); menu.classList.remove('open'); }
   function toggleDark(){ document.body.classList.toggle('dark'); }
-
   function carregarDisciplinas(){
     const c = document.getElementById('listaDisciplinas');
     disciplinas.forEach(d=>{
-      const div=document.createElement('div');
-      div.className='disciplina';
-      div.innerText=d;
-      div.onclick=()=>abrirDisciplina(d);
-      c.appendChild(div);
+      const div=document.createElement('div'); div.className='disciplina'; div.innerText=d; div.onclick=()=>abrirDisciplina(d); c.appendChild(div);
     });
   }
 
   function abrirDisciplina(nome){
     const v=document.getElementById('disciplinaView');
-    v.innerHTML=`<h3>${nome}</h3><div class='card'><pre>${conteudo[nome]}</pre></div>`;
+    v.innerHTML=`<h3>${nome}</h3>`;
+    conteudo[nome].forEach(item=>{
+      const card=document.createElement('div');
+      card.className='card';
+      card.innerHTML=`<div class='titulo'><strong>${item.title}</strong></div><div class='expandable-content'>${item.text}</div>`;
+      card.onclick=function(){ const content=this.querySelector('.expandable-content'); content.style.display=(content.style.display==='block'?'none':'block'); };
+      v.appendChild(card);
+    });
     showView('disciplinaView');
   }
 
-  function guardarNotaGeral(){
-    localStorage.setItem('nota_geral', document.getElementById('notaGeral').value);
-    alert('Anotação guardada');
-  }
-
+  function guardarNotaGeral(){ localStorage.setItem('nota_geral', document.getElementById('notaGeral').value); alert('Anotação guardada'); }
   carregarDisciplinas();
 </script>
 
