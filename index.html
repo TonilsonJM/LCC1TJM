@@ -1,18 +1,19 @@
+
 <!DOCTYPE html>
 <html lang="pt">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Estudos CC</title>
+  <title>LCC1T</title>
   <style>
     :root {
-      --bg-light: linear-gradient(135deg, #e3f2fd, #fce4ec);
-      --bg-dark: linear-gradient(135deg, #121212, #1f1f1f);
+      --bg-light: linear-gradient(135deg, #e3f2fd, #ede7f6);
+      --bg-dark: linear-gradient(135deg, #121212, #1c1c1c);
       --card-light: #ffffff;
       --card-dark: #1e1e1e;
       --text-light: #111;
       --text-dark: #eee;
-      --accent: #2979ff;
+      --accent: #2962ff;
     }
 
     body {
@@ -28,15 +29,15 @@
       color: var(--text-dark);
     }
 
-    .app {
-      padding: 16px;
-    }
+    .app { padding: 16px; }
+
+    h3 { margin-top: 0; }
 
     /* Hamburger */
     .hamburger {
       position: fixed;
-      top: 15px;
-      left: 15px;
+      top: 16px;
+      left: 16px;
       width: 28px;
       height: 22px;
       display: flex;
@@ -45,7 +46,6 @@
       cursor: pointer;
       z-index: 1001;
     }
-
     .hamburger span {
       height: 3px;
       background: currentColor;
@@ -61,36 +61,26 @@
       max-width: 280px;
       height: 100%;
       backdrop-filter: blur(15px);
-      background: rgba(255,255,255,0.6);
+      background: rgba(255,255,255,0.65);
       padding: 70px 20px;
       transform: translateX(-100%);
       transition: transform 0.3s ease;
       z-index: 1000;
     }
-
-    body.dark .menu {
-      background: rgba(30,30,30,0.7);
-    }
-
-    .menu.open {
-      transform: translateX(0);
-    }
+    body.dark .menu { background: rgba(30,30,30,0.7); }
+    .menu.open { transform: translateX(0); }
 
     .menu button {
       width: 100%;
       padding: 14px;
       margin-bottom: 12px;
       border: none;
-      border-radius: 14px;
+      border-radius: 16px;
       background: var(--card-light);
       font-size: 15px;
       text-align: left;
     }
-
-    body.dark .menu button {
-      background: var(--card-dark);
-      color: var(--text-dark);
-    }
+    body.dark .menu button { background: var(--card-dark); color: var(--text-dark); }
 
     /* Views */
     .view { display: none; }
@@ -104,26 +94,17 @@
       margin-bottom: 16px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.08);
     }
-
-    body.dark .card {
-      background: var(--card-dark);
-    }
+    body.dark .card { background: var(--card-dark); }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-      gap: 12px;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 14px;
     }
 
-    .recent {
-      font-size: 13px;
-      opacity: 0.8;
-    }
-
-    /* Discipline selector */
     .disciplina {
       padding: 18px;
-      border-radius: 18px;
+      border-radius: 20px;
       background: linear-gradient(135deg, #42a5f5, #7e57c2);
       color: white;
       text-align: center;
@@ -131,7 +112,6 @@
       cursor: pointer;
     }
 
-    /* Floating action */
     .fab {
       position: fixed;
       bottom: 25px;
@@ -147,19 +127,9 @@
       box-shadow: 0 10px 25px rgba(0,0,0,0.25);
       display: none;
     }
-
     .fab.show { display: block; }
 
-    textarea, input, select {
-      width: 100%;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid #ccc;
-      margin-bottom: 10px;
-      font-family: inherit;
-    }
-
-    iframe, img { width: 100%; border-radius: 14px; }
+    ul { padding-left: 18px; }
   </style>
 </head>
 <body>
@@ -171,6 +141,7 @@
 <div class="menu" id="menu">
   <button onclick="showView('home')">Home</button>
   <button onclick="showView('disciplinas')">Disciplinas</button>
+  <button onclick="showView('calendarios')">Calendários</button>
   <button onclick="showView('anotacoes')">Anotações Gerais</button>
   <button onclick="toggleDark()">Modo Escuro</button>
 </div>
@@ -178,8 +149,10 @@
 <div class="app">
 
   <div id="home" class="view active">
-    <h3>Recentes</h3>
-    <div id="recentes" class="grid"></div>
+    <h3>📌 Conteúdos Recentes</h3>
+    <div class="card">Análise Matemática: Progressões Aritméticas e Geométricas</div>
+    <div class="card">ICC: Conversão de bases e soma binária</div>
+    <div class="card">Programação I: Matrizes</div>
   </div>
 
   <div id="disciplinas" class="view">
@@ -189,6 +162,15 @@
 
   <div id="disciplinaView" class="view"></div>
 
+  <div id="calendarios" class="view">
+    <h3>Calendário Académico (Demo)</h3>
+    <div class="card"><strong>Segunda:</strong> Análise Matemática, ICC</div>
+    <div class="card"><strong>Terça:</strong> Programação I, Comunicação Escrita</div>
+    <div class="card"><strong>Quarta:</strong> Lógica Matemática, MIC</div>
+    <div class="card"><strong>Quinta:</strong> Programação I (Prática)</div>
+    <div class="card"><strong>Sexta:</strong> Revisões / Exercícios</div>
+  </div>
+
   <div id="anotacoes" class="view">
     <div class="card">
       <textarea id="notaGeral" placeholder="Anotações gerais..."></textarea>
@@ -197,13 +179,26 @@
   </div>
 </div>
 
-<button class="fab" id="fab" onclick="novaAcao()">+</button>
+<button class="fab" id="fab">+</button>
 
 <script>
-  const disciplinas = [
-    'Análise Matemática','Lógica Matemática','ICC','MIC','Programação I','Comunicação Escrita','Inglês Técnico'
-  ];
+  const conteudo = {
+    'Análise Matemática': `Progressões Aritméticas (PA):\n\nFórmula do termo geral: an = a1 + (n-1)r\nSoma: Sn = n(a1+an)/2\n\nProgressões Geométricas (PG):\nTermo geral: an = a1·r^(n-1)\nSoma finita: Sn = a1(r^n-1)/(r-1)\n\nExemplo: 2,4,6,8 é uma PA com r=2`,
 
+    'Lógica Matemática': `Tabela da Verdade:\n\n¬p (negação)\np ∧ q (conjunção)\np ∨ q (disjunção)\np → q (condicional)\np ↔ q (bicondicional)\n\nUse tabelas para validar proposições compostas.`,
+
+    'ICC': `Conversão de bases:\n\nDecimal → Binário\nDivisões sucessivas por 2\n\nBinário → Decimal\nSoma dos pesos (2^n)\n\nUnidades:\n1 KB = 1024 B\n1 MB = 1024 KB\n1 GB = 1024 MB\n\nSoma binária:\n1+1 = 0 (vai 1)`,
+
+    'MIC': `Tema vs Título:\n\nTema: assunto geral\nTítulo: forma específica do estudo\n\nMetodologia Científica:\n- Tipo de pesquisa\n- População e amostra\n- Instrumentos de recolha de dados\n- Procedimentos`,
+
+    'Programação I': `Estruturas:\n\nCondição: if / else\nRepetição: for, while\nVetores: int v[10]\nMatrizes: int m[3][3]\n\nPercorrer matriz com dois ciclos for.`,
+
+    'Comunicação Escrita': `Frase e oração\nUso correto da vírgula\nAnálise morfológica\n\nPronomes enclíticos e mesoclíticos:\nVê-o\nComprei-lhe\nDeram-lhe-o`,
+
+    'Inglês Técnico': `Ainda sem conteúdo.`
+  };
+
+  const disciplinas = Object.keys(conteudo);
   const menu = document.getElementById('menu');
   const fab = document.getElementById('fab');
 
@@ -231,21 +226,14 @@
 
   function abrirDisciplina(nome){
     const v=document.getElementById('disciplinaView');
-    v.innerHTML=`<h3>${nome}</h3><div class='card'><textarea id='notaDisc' placeholder='Anotar...'></textarea><button onclick="guardarNotaDisc('${nome}')">Guardar</button></div>`;
+    v.innerHTML=`<h3>${nome}</h3><div class='card'><pre>${conteudo[nome]}</pre></div>`;
     showView('disciplinaView');
-  }
-
-  function guardarNotaDisc(d){
-    localStorage.setItem('nota_'+d, document.getElementById('notaDisc').value);
-    alert('Guardado');
   }
 
   function guardarNotaGeral(){
     localStorage.setItem('nota_geral', document.getElementById('notaGeral').value);
-    alert('Guardado');
+    alert('Anotação guardada');
   }
-
-  function novaAcao(){ alert('Aqui você decide: PDF, Imagem ou Anotação'); }
 
   carregarDisciplinas();
 </script>
