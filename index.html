@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Estudos CC</title>
+  <style>
+    :root {
+      --bg-light: linear-gradient(135deg, #e3f2fd, #fce4ec);
+      --bg-dark: linear-gradient(135deg, #121212, #1f1f1f);
+      --card-light: #ffffff;
+      --card-dark: #1e1e1e;
+      --text-light: #111;
+      --text-dark: #eee;
+      --accent: #2979ff;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg-light);
+      color: var(--text-light);
+      min-height: 100vh;
+    }
+
+    body.dark {
+      background: var(--bg-dark);
+      color: var(--text-dark);
+    }
+
+    .app {
+      padding: 16px;
+    }
+
+    /* Hamburger */
+    .hamburger {
+      position: fixed;
+      top: 15px;
+      left: 15px;
+      width: 28px;
+      height: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      z-index: 1001;
+    }
+
+    .hamburger span {
+      height: 3px;
+      background: currentColor;
+      border-radius: 2px;
+    }
+
+    /* Menu */
+    .menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 75%;
+      max-width: 280px;
+      height: 100%;
+      backdrop-filter: blur(15px);
+      background: rgba(255,255,255,0.6);
+      padding: 70px 20px;
+      transform: translateX(-100%);
+      transition: transform 0.3s ease;
+      z-index: 1000;
+    }
+
+    body.dark .menu {
+      background: rgba(30,30,30,0.7);
+    }
+
+    .menu.open {
+      transform: translateX(0);
+    }
+
+    .menu button {
+      width: 100%;
+      padding: 14px;
+      margin-bottom: 12px;
+      border: none;
+      border-radius: 14px;
+      background: var(--card-light);
+      font-size: 15px;
+      text-align: left;
+    }
+
+    body.dark .menu button {
+      background: var(--card-dark);
+      color: var(--text-dark);
+    }
+
+    /* Views */
+    .view { display: none; }
+    .view.active { display: block; }
+
+    /* Cards */
+    .card {
+      background: var(--card-light);
+      border-radius: 22px;
+      padding: 16px;
+      margin-bottom: 16px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+    }
+
+    body.dark .card {
+      background: var(--card-dark);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+    }
+
+    .recent {
+      font-size: 13px;
+      opacity: 0.8;
+    }
+
+    /* Discipline selector */
+    .disciplina {
+      padding: 18px;
+      border-radius: 18px;
+      background: linear-gradient(135deg, #42a5f5, #7e57c2);
+      color: white;
+      text-align: center;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    /* Floating action */
+    .fab {
+      position: fixed;
+      bottom: 25px;
+      right: 25px;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      border: none;
+      font-size: 32px;
+      background: var(--accent);
+      color: white;
+      cursor: pointer;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.25);
+      display: none;
+    }
+
+    .fab.show { display: block; }
+
+    textarea, input, select {
+      width: 100%;
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      font-family: inherit;
+    }
+
+    iframe, img { width: 100%; border-radius: 14px; }
+  </style>
+</head>
+<body>
+
+<div class="hamburger" onclick="toggleMenu()">
+  <span></span><span></span><span></span>
+</div>
+
+<div class="menu" id="menu">
+  <button onclick="showView('home')">Home</button>
+  <button onclick="showView('disciplinas')">Disciplinas</button>
+  <button onclick="showView('anotacoes')">Anotações Gerais</button>
+  <button onclick="toggleDark()">Modo Escuro</button>
+</div>
+
+<div class="app">
+
+  <div id="home" class="view active">
+    <h3>Recentes</h3>
+    <div id="recentes" class="grid"></div>
+  </div>
+
+  <div id="disciplinas" class="view">
+    <h3>Disciplinas</h3>
+    <div class="grid" id="listaDisciplinas"></div>
+  </div>
+
+  <div id="disciplinaView" class="view"></div>
+
+  <div id="anotacoes" class="view">
+    <div class="card">
+      <textarea id="notaGeral" placeholder="Anotações gerais..."></textarea>
+      <button onclick="guardarNotaGeral()">Guardar</button>
+    </div>
+  </div>
+</div>
+
+<button class="fab" id="fab" onclick="novaAcao()">+</button>
+
+<script>
+  const disciplinas = [
+    'Análise Matemática','Lógica Matemática','ICC','MIC','Programação I','Comunicação Escrita','Inglês Técnico'
+  ];
+
+  const menu = document.getElementById('menu');
+  const fab = document.getElementById('fab');
+
+  function toggleMenu(){ menu.classList.toggle('open'); }
+
+  function showView(id){
+    document.querySelectorAll('.view').forEach(v=>v.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    fab.classList.toggle('show', id==='disciplinaView');
+    menu.classList.remove('open');
+  }
+
+  function toggleDark(){ document.body.classList.toggle('dark'); }
+
+  function carregarDisciplinas(){
+    const c = document.getElementById('listaDisciplinas');
+    disciplinas.forEach(d=>{
+      const div=document.createElement('div');
+      div.className='disciplina';
+      div.innerText=d;
+      div.onclick=()=>abrirDisciplina(d);
+      c.appendChild(div);
+    });
+  }
+
+  function abrirDisciplina(nome){
+    const v=document.getElementById('disciplinaView');
+    v.innerHTML=`<h3>${nome}</h3><div class='card'><textarea id='notaDisc' placeholder='Anotar...'></textarea><button onclick="guardarNotaDisc('${nome}')">Guardar</button></div>`;
+    showView('disciplinaView');
+  }
+
+  function guardarNotaDisc(d){
+    localStorage.setItem('nota_'+d, document.getElementById('notaDisc').value);
+    alert('Guardado');
+  }
+
+  function guardarNotaGeral(){
+    localStorage.setItem('nota_geral', document.getElementById('notaGeral').value);
+    alert('Guardado');
+  }
+
+  function novaAcao(){ alert('Aqui você decide: PDF, Imagem ou Anotação'); }
+
+  carregarDisciplinas();
+</script>
+
+</body>
+</html>
