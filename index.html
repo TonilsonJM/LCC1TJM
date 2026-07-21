@@ -1,194 +1,404 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LCC1T</title>
-  <style>
-    :root {
-      --bg-light: linear-gradient(135deg, #e3f2fd, #ede7f6);
-      --bg-dark: linear-gradient(135deg, #121212, #1c1c1c);
-      --card-light: #ffffff;
-      --card-dark: #1e1e1e;
-      --text-light: #111;
-      --text-dark: #eee;
-      --accent: #2962ff;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resolutor de Sistemas 3x3 - Passo a Passo</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #2c3e50;
+            --primary: #2563eb;
+            --primary-hover: #1d4ed8;
+            --border-color: #cbd5e1;
+            --step-bg: #f8fafc;
+        }
 
-    body {
-      margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: var(--bg-light);
-      color: var(--text-light);
-      min-height: 100vh;
-      padding-top: 60px;
-    }
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+        }
 
-    body.dark { background: var(--bg-dark); color: var(--text-dark); }
+        .container {
+            width: 100%;
+            max-width: 850px;
+            background: var(--card-bg);
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
 
-    .app { padding: 16px; margin-left: 0; }
-    h3 { margin-top: 0; padding-left: 40px; } /* conteúdo mais à direita */
+        h1 {
+            text-align: center;
+            font-size: 1.6rem;
+            margin-bottom: 8px;
+            color: #1e293b;
+        }
 
-    .hamburger {
-      position: fixed;
-      top: 16px;
-      left: 16px;
-      width: 28px;
-      height: 22px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      cursor: pointer;
-      z-index: 1001;
-    }
-    .hamburger span { height: 3px; background: currentColor; border-radius: 2px; }
+        p.subtitle {
+            text-align: center;
+            color: #64748b;
+            font-size: 0.95rem;
+            margin-bottom: 25px;
+        }
 
-    .menu {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 75%;
-      max-width: 280px;
-      height: 100%;
-      backdrop-filter: blur(15px);
-      background: rgba(255,255,255,0.65);
-      padding: 70px 20px;
-      transform: translateX(-100%);
-      transition: transform 0.3s ease;
-      z-index: 1000;
-    }
-    body.dark .menu { background: rgba(30,30,30,0.7); }
-    .menu.open { transform: translateX(0); }
-    .menu button { width: 100%; padding: 14px; margin-bottom: 12px; border: none; border-radius: 16px; background: var(--card-light); font-size: 15px; text-align: left; }
-    body.dark .menu button { background: var(--card-dark); color: var(--text-dark); }
+        .eq-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-    .view { display: none; }
-    .view.active { display: block; }
+        .eq-row {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f1f5f9;
+            padding: 10px 14px;
+            border-radius: 8px;
+            flex-wrap: wrap;
+        }
 
-    .card { background: var(--card-light); border-radius: 22px; padding: 16px; margin-bottom: 16px; box-shadow: 0 8px 20px rgba(0,0,0,0.08); cursor: pointer; }
-    body.dark .card { background: var(--card-dark); }
+        .eq-label {
+            font-weight: bold;
+            min-width: 45px;
+            color: var(--primary);
+        }
 
-    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 14px; }
-    .disciplina { padding: 18px; border-radius: 20px; background: linear-gradient(135deg, #42a5f5, #7e57c2); color: white; text-align: center; font-weight: 500; cursor: pointer; }
+        input[type="number"] {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1rem;
+        }
 
-    .fab { position: fixed; bottom: 25px; right: 25px; width: 58px; height: 58px; border-radius: 50%; border: none; font-size: 32px; background: var(--accent); color: white; cursor: pointer; box-shadow: 0 10px 25px rgba(0,0,0,0.25); display: none; }
-    .fab.show { display: block; }
+        input[type="number"]:focus {
+            outline: 2px solid var(--primary);
+            border-color: transparent;
+        }
 
-    ul { padding-left: 18px; }
-    pre { white-space: pre-wrap; word-wrap: break-word; }
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
 
-    .expandable-content { display: none; padding-top: 8px; }
-  </style>
+        button {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-hover);
+        }
+
+        .btn-secondary {
+            background-color: #e2e8f0;
+            color: #334155;
+        }
+
+        .btn-secondary:hover {
+            background-color: #cbd5e1;
+        }
+
+        .results {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step-card {
+            background: var(--step-bg);
+            border-left: 4px solid var(--primary);
+            padding: 16px;
+            border-radius: 6px;
+        }
+
+        .step-title {
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .equation-line {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 1.1rem;
+            background: #ffffff;
+            padding: 8px 12px;
+            border-radius: 4px;
+            border: 1px solid #e2e8f0;
+            margin: 6px 0;
+            display: inline-block;
+        }
+
+        .explanation {
+            font-size: 0.95rem;
+            color: #475569;
+            margin: 6px 0;
+            line-height: 1.4;
+        }
+
+        .final-solution {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+            padding: 16px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #14532d;
+        }
+    </style>
 </head>
 <body>
 
-<div class="hamburger" onclick="toggleMenu()">
-  <span></span><span></span><span></span>
-</div>
+<div class="container">
+    <h1>Resolutor de Sistemas 3x3</h1>
+    <p class="subtitle">Resolução passo a passo por eliminação e substituição algébrica</p>
 
-<div class="menu" id="menu">
-  <button onclick="showView('home')">Home</button>
-  <button onclick="showView('disciplinas')">Disciplinas</button>
-  <button onclick="showView('calendarios')">Calendários</button>
-  <button onclick="showView('anotacoes')">Anotações Gerais</button>
-  <button onclick="toggleDark()">Modo Escuro</button>
-</div>
-
-<div class="app">
-  <div id="home" class="view active">
-    <h3>📌 Conteúdos Recentes</h3>
-    <div class="card" onclick="abrirDisciplina('Análise Matemática')">Análise Matemática: Progressões</div>
-    <div class="card" onclick="abrirDisciplina('ICC')">ICC: Conversão de bases e soma binária</div>
-    <div class="card" onclick="abrirDisciplina('Programação I')">Programação I: Matrizes</div>
-  </div>
-
-  <div id="disciplinas" class="view">
-    <h3>Disciplinas</h3>
-    <div class="grid" id="listaDisciplinas"></div>
-  </div>
-
-  <div id="disciplinaView" class="view"></div>
-
-  <div id="calendarios" class="view">
-    <h3>Calendário Académico</h3>
-    <div class="card"><strong>Segunda:</strong> Lógica, Análise, Comunicação Escrita</div>
-    <div class="card"><strong>Terça:</strong> Lógica, ICC, ICC</div>
-    <div class="card"><strong>Quarta:</strong> MIC, Análise, Programação I</div>
-    <div class="card"><strong>Quinta:</strong> MIC, Inglês, Comunicação Escrita</div>
-    <div class="card"><strong>Sexta:</strong> Inglês, Programação I, Programação I</div>
-  </div>
-
-  <div id="anotacoes" class="view">
-    <div class="card">
-      <textarea id="notaGeral" placeholder="Anotações gerais..."></textarea>
-      <button onclick="guardarNotaGeral()">Guardar</button>
+    <div class="eq-grid">
+        <!-- Equação 1 -->
+        <div class="eq-row">
+            <span class="eq-label">(Eq 1):</span>
+            <input type="number" id="a1" value="2"> x +
+            <input type="number" id="b1" value="1"> y +
+            <input type="number" id="c1" value="-1"> z =
+            <input type="number" id="d1" value="8">
+        </div>
+        <!-- Equação 2 -->
+        <div class="eq-row">
+            <span class="eq-label">(Eq 2):</span>
+            <input type="number" id="a2" value="-3"> x +
+            <input type="number" id="b2" value="-1"> y +
+            <input type="number" id="c2" value="2"> z =
+            <input type="number" id="d2" value="-11">
+        </div>
+        <!-- Equação 3 -->
+        <div class="eq-row">
+            <span class="eq-label">(Eq 3):</span>
+            <input type="number" id="a3" value="-2"> x +
+            <input type="number" id="b3" value="1"> y +
+            <input type="number" id="c3" value="2"> z =
+            <input type="number" id="d3" value="-3">
+        </div>
     </div>
-  </div>
-</div>
 
-<button class="fab" id="fab">+</button>
+    <div class="btn-group">
+        <button class="btn-primary" onclick="resolverSistema()">Resolver Passo a Passo</button>
+        <button class="btn-secondary" onclick="limparCampos()">Limpar</button>
+    </div>
+
+    <div id="resultado" class="results"></div>
+</div>
 
 <script>
-  const conteudo = {
-    'Análise Matemática': [
-      {title: 'Progressões Aritméticas', text: 'PA: termo geral an = a1 + (n-1)r. Soma: Sn = n(a1+an)/2. Exemplo: 2,4,6,8.'},
-      {title: 'Progressões Geométricas', text: 'PG: termo geral an = a1·r^(n-1). Soma: Sn = a1(r^n-1)/(r-1). Exemplo: 3,6,12,24.'},
-      {title: 'Dicas', text: 'Identifique sempre a razão r. Resolva exercícios de soma de termos.'}
-    ],
-    'Lógica Matemática': [
-      {title: 'Tabelas da Verdade', text: 'Negação ¬p, conjunção p∧q, disjunção p∨q, condicional p→q, bicondicional p↔q. Exemplo com duas variáveis:'},
-      {title: 'Exemplo de Tabela', text: 'p | q | p∧q\n0 | 0 | 0\n0 | 1 | 0\n1 | 0 | 0\n1 | 1 | 1'},
-      {title: 'Dicas', text: 'Use tabelas para validar proposições compostas. Pratique com 2 ou 3 variáveis.'}
-    ],
-    'ICC': [
-      {title: 'Conversão de Bases', text: 'Decimal→Binário: divisões sucessivas por 2. Binário→Decimal: soma dos pesos 2^n. Bases 8 e 16: agrupe bits.'},
-      {title: 'Conversão de Unidades', text: '1 KB = 1024 B, 1 MB = 1024 KB, 1 GB = 1024 MB.'},
-      {title: 'Soma Binária', text: '0+0=0, 1+0=1, 1+1=0 (vai 1). Pratique somas e subtrações binárias.'}
-    ],
-    'MIC': [
-      {title: 'Diferença entre Tema e Título', text: 'Tema: assunto geral. Título: forma específica do estudo.'},
-      {title: 'Metodologia Científica', text: 'Inclui tipo de pesquisa, população e amostra, instrumentos, procedimentos, referências bibliográficas. Organize em etapas e subtítulos.'}
-    ],
-    'Programação I': [
-      {title: 'Estruturas de Controle', text: 'If, else, else if; For, while; Vetores e Matrizes.'},
-      {title: 'Matrizes', text: 'Exemplo: int m[3][3]; percorrer com dois loops for. Sempre inicialize variáveis. Comente seu código.'}
-    ],
-    'Comunicação Escrita': [
-      {title: 'Frases e Pontuação', text: 'Uso correto da vírgula. Análise morfológica: substantivos, verbos, pronomes.'},
-      {title: 'Pronomes Clíticos', text: 'Vê-o, Comprei-lhe, Deram-lhe-o. Leia frases em voz alta para praticar.'}
-    ],
-    'Inglês Técnico': [{title: 'Conteúdo', text: 'Ainda sem conteúdo.'}]
-  };
+    // Converter números decimais em frações legíveis para o caderno
+    function toFrac(val) {
+        if (Math.abs(val) < 1e-9) return "0";
+        if (Math.abs(val - Math.round(val)) < 1e-7) return Math.round(val).toString();
+        
+        let sign = val < 0 ? "-" : "";
+        val = Math.abs(val);
+        for (let d = 1; d <= 100; d++) {
+            let n = Math.round(val * d);
+            if (Math.abs(val - n / d) < 1e-5) {
+                return sign + (d === 1 ? n : `${n}/${d}`);
+            }
+        }
+        return (sign ? "-" : "") + val.toFixed(2);
+    }
 
-  const disciplinas = Object.keys(conteudo);
-  const menu = document.getElementById('menu');
-  const fab = document.getElementById('fab');
+    // Formatar termo individual com variável (ex: "+ 2x", "- y", "0")
+    function formatTerm(coef, varName, isFirst = false) {
+        if (Math.abs(coef) < 1e-9) return "";
+        let fracStr = toFrac(Math.abs(coef));
+        let term = (fracStr === "1" ? "" : fracStr) + varName;
+        
+        if (isFirst) {
+            return (coef < 0 ? "-" : "") + term;
+        } else {
+            return (coef < 0 ? " - " : " + ") + term;
+        }
+    }
 
-  function toggleMenu(){ menu.classList.toggle('open'); }
-  function showView(id){ document.querySelectorAll('.view').forEach(v=>v.classList.remove('active')); document.getElementById(id).classList.add('active'); fab.classList.toggle('show', id==='disciplinaView'); menu.classList.remove('open'); }
-  function toggleDark(){ document.body.classList.toggle('dark'); }
-  function carregarDisciplinas(){
-    const c = document.getElementById('listaDisciplinas');
-    disciplinas.forEach(d=>{
-      const div=document.createElement('div'); div.className='disciplina'; div.innerText=d; div.onclick=()=>abrirDisciplina(d); c.appendChild(div);
-    });
-  }
+    // Formatar equação completa em texto simples
+    function formatEq(a, b, c, d) {
+        let str = "";
+        let t1 = formatTerm(a, "x", true);
+        let t2 = formatTerm(b, "y", str === "" && t1 === "");
+        let t3 = formatTerm(c, "z", str === "" && t1 === "" && t2 === "");
 
-  function abrirDisciplina(nome){
-    const v=document.getElementById('disciplinaView');
-    v.innerHTML=`<h3>${nome}</h3>`;
-    conteudo[nome].forEach(item=>{
-      const card=document.createElement('div');
-      card.className='card';
-      card.innerHTML=`<div class='titulo'><strong>${item.title}</strong></div><div class='expandable-content'>${item.text}</div>`;
-      card.onclick=function(){ const content=this.querySelector('.expandable-content'); content.style.display=(content.style.display==='block'?'none':'block'); };
-      v.appendChild(card);
-    });
-    showView('disciplinaView');
-  }
+        str = (t1 + t2 + t3).trim();
+        if (str === "") str = "0";
+        return `${str} = ${toFrac(d)}`;
+    }
 
-  function guardarNotaGeral(){ localStorage.setItem('nota_geral', document.getElementById('notaGeral').value); alert('Anotação guardada'); }
-  carregarDisciplinas();
+    function limparCampos() {
+        ['a1','b1','c1','d1','a2','b2','c2','d2','a3','b3','c3','d3'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+        document.getElementById('resultado').innerHTML = '';
+    }
+
+    function resolverSistema() {
+        const out = document.getElementById('resultado');
+        out.innerHTML = '';
+
+        // Obter valores
+        let a1 = parseFloat(document.getElementById('a1').value) || 0;
+        let b1 = parseFloat(document.getElementById('b1').value) || 0;
+        let c1 = parseFloat(document.getElementById('c1').value) || 0;
+        let d1 = parseFloat(document.getElementById('d1').value) || 0;
+
+        let a2 = parseFloat(document.getElementById('a2').value) || 0;
+        let b2 = parseFloat(document.getElementById('b2').value) || 0;
+        let c2 = parseFloat(document.getElementById('c2').value) || 0;
+        let d2 = parseFloat(document.getElementById('d2').value) || 0;
+
+        let a3 = parseFloat(document.getElementById('a3').value) || 0;
+        let b3 = parseFloat(document.getElementById('b3').value) || 0;
+        let c3 = parseFloat(document.getElementById('c3').value) || 0;
+        let d3 = parseFloat(document.getElementById('d3').value) || 0;
+
+        let stepsHTML = '';
+
+        // Passo 1: Sistema Original
+        stepsHTML += `
+            <div class="step-card">
+                <div class="step-title">Passo 1: Escrever o sistema original de equações</div>
+                <div class="explanation">Identificamos as três equações para iniciar o escalonamento:</div>
+                <div><b>(Eq 1):</b> <span class="equation-line">${formatEq(a1, b1, c1, d1)}</span></div>
+                <div><b>(Eq 2):</b> <span class="equation-line">${formatEq(a2, b2, c2, d2)}</span></div>
+                <div><b>(Eq 3):</b> <span class="equation-line">${formatEq(a3, b3, c3, d3)}</span></div>
+            </div>
+        `;
+
+        // Troca de pivô se a1 = 0
+        if (Math.abs(a1) < 1e-9) {
+            if (Math.abs(a2) > 1e-9) {
+                [a1, b1, c1, d1, a2, b2, c2, d2] = [a2, b2, c2, d2, a1, b1, c1, d1];
+                stepsHTML += `<div class="step-card"><div class="explanation">Trocamos a (Eq 1) com a (Eq 2) para garantir que o coeficiente de x não seja zero.</div></div>`;
+            } else if (Math.abs(a3) > 1e-9) {
+                [a1, b1, c1, d1, a3, b3, c3, d3] = [a3, b3, c3, d3, a1, b1, c1, d1];
+                stepsHTML += `<div class="step-card"><div class="explanation">Trocamos a (Eq 1) com a (Eq 3) para garantir que o coeficiente de x não seja zero.</div></div>`;
+            }
+        }
+
+        // Passo 2: Eliminar 'x' das equações (Eq 2) e (Eq 3)
+        let k1 = a2 / a1;
+        let b2_prime = b2 - k1 * b1;
+        let c2_prime = c2 - k1 * c1;
+        let d2_prime = d2 - k1 * d1;
+
+        let k2 = a3 / a1;
+        let b3_prime = b3 - k2 * b1;
+        let c3_prime = c3 - k2 * c1;
+        let d3_prime = d3 - k2 * d1;
+
+        stepsHTML += `
+            <div class="step-card">
+                <div class="step-title">Passo 2: Eliminar a variável 'x' das equações (Eq 2) e (Eq 3)</div>
+                <div class="explanation">
+                    - Para eliminar 'x' da <b>(Eq 2)</b>, subtraímos dela <b>(${toFrac(k1)}) × (Eq 1)</b>:<br>
+                    <b>(Eq 2'):</b> <span class="equation-line">${formatEq(0, b2_prime, c2_prime, d2_prime)}</span>
+                </div>
+                <div class="explanation" style="margin-top:12px;">
+                    - Para eliminar 'x' da <b>(Eq 3)</b>, subtraímos dela <b>(${toFrac(k2)}) × (Eq 1)</b>:<br>
+                    <b>(Eq 3'):</b> <span class="equation-line">${formatEq(0, b3_prime, c3_prime, d3_prime)}</span>
+                </div>
+            </div>
+        `;
+
+        // Troca de pivô se b2_prime = 0
+        if (Math.abs(b2_prime) < 1e-9 && Math.abs(b3_prime) > 1e-9) {
+            [b2_prime, c2_prime, d2_prime, b3_prime, c3_prime, d3_prime] = 
+            [b3_prime, c3_prime, d3_prime, b2_prime, c2_prime, d2_prime];
+            stepsHTML += `<div class="step-card"><div class="explanation">Trocamos a (Eq 2') com a (Eq 3') para evitar pivô nulo em y.</div></div>`;
+        }
+
+        // Passo 3: Eliminar 'y' da (Eq 3')
+        let k3 = b3_prime / b2_prime;
+        let c3_double = c3_prime - k3 * c2_prime;
+        let d3_double = d3_prime - k3 * d2_prime;
+
+        stepsHTML += `
+            <div class="step-card">
+                <div class="step-title">Passo 3: Eliminar a variável 'y' da equação (Eq 3')</div>
+                <div class="explanation">
+                    Usando o sistema 2x2 formado por (Eq 2') e (Eq 3'), subtraímos de (Eq 3') o valor <b>(${toFrac(k3)}) × (Eq 2')</b>:
+                </div>
+                <div><b>(Eq 3''):</b> <span class="equation-line">${formatEq(0, 0, c3_double, d3_double)}</span></div>
+            </div>
+        `;
+
+        // Passo 4: Substituição Regressiva (Achar z, depois y, depois x)
+        if (Math.abs(c3_double) < 1e-9) {
+            if (Math.abs(d3_double) < 1e-9) {
+                out.innerHTML = stepsHTML + `<div class="step-card" style="border-left-color: #eab308;"><div class="step-title" style="color: #ca8a04;">Sistema Possível Indeterminado (SPI)</div><div class="explanation">O sistema possui infinitas soluções.</div></div>`;
+            } else {
+                out.innerHTML = stepsHTML + `<div class="step-card" style="border-left-color: #ef4444;"><div class="step-title" style="color: #dc2626;">Sistema Impossível (SI)</div><div class="explanation">O sistema não possui nenhuma solução válida.</div></div>`;
+            }
+            return;
+        }
+
+        let z = d3_double / c3_double;
+        let y = (d2_prime - c2_prime * z) / b2_prime;
+        let x = (d1 - b1 * y - c1 * z) / a1;
+
+        stepsHTML += `
+            <div class="step-card">
+                <div class="step-title">Passo 4: Substituição Regressiva (Encontrar as incógnitas)</div>
+                <div class="explanation">
+                    <b>1) Isolar 'z' na (Eq 3''):</b><br>
+                    ${toFrac(c3_double)}z = ${toFrac(d3_double)} &nbsp;⇒&nbsp; <b>z = ${toFrac(z)}</b>
+                </div>
+                <hr style="border:0; border-top: 1px solid #e2e8f0; margin: 10px 0;">
+                <div class="explanation">
+                    <b>2) Substituir z = ${toFrac(z)} na (Eq 2') para achar 'y':</b><br>
+                    ${formatEq(0, b2_prime, c2_prime, d2_prime)}<br>
+                    ${toFrac(b2_prime)}y + (${toFrac(c2_prime)}) × (${toFrac(z)}) = ${toFrac(d2_prime)} &nbsp;⇒&nbsp; <b>y = ${toFrac(y)}</b>
+                </div>
+                <hr style="border:0; border-top: 1px solid #e2e8f0; margin: 10px 0;">
+                <div class="explanation">
+                    <b>3) Substituir y = ${toFrac(y)} e z = ${toFrac(z)} na (Eq 1) para achar 'x':</b><br>
+                    ${formatEq(a1, b1, c1, d1)}<br>
+                    ${toFrac(a1)}x + (${toFrac(b1)}) × (${toFrac(y)}) + (${toFrac(c1)}) × (${toFrac(z)}) = ${toFrac(d1)} &nbsp;⇒&nbsp; <b>x = ${toFrac(x)}</b>
+                </div>
+            </div>
+        `;
+
+        // Passo 5: Solução Final
+        stepsHTML += `
+            <div class="final-solution">
+                Solução Final: S = { (${toFrac(x)}, ${toFrac(y)}, ${toFrac(z)}) }
+            </div>
+        `;
+
+        out.innerHTML = stepsHTML;
+    }
+
+    // Executar uma vez ao carregar para mostrar o exemplo inicial
+    window.onload = resolverSistema;
 </script>
 
 </body>
